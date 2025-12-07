@@ -2,19 +2,14 @@ import { GoogleGenerativeAI } from '@google/genai';
 import { QuizData, ResultContent, Question, Category } from './types'; 
 
 // *****************************************************************
-// 🔑 KORREKTUR: VITE-PRÄFIX FÜR API KEY NÖTIG, DAMIT REACT IHN SIEHT
+// 🚨 ACHTUNG: UNSICHERER TEST-CODE (NUR ZUM DEBUGGEN!)
 // *****************************************************************
 
-// 1. Hole den API Key aus der NEUEN Netlify Umgebungsvariable (VITE_GEMINI_API_KEY)
-//    Wir nutzen process.env, da Netlify es zur Build-Zeit einfügt.
-const GEMINI_API_KEY = process.env.VITE_GEMINI_API_KEY; 
+// ERSETZEN SIE HIER DIESEN PLATZHALTER MIT IHREM ECHTEN GEMINI API KEY!
+// Beispiel: const GEMINI_API_KEY = "AIzaSyDHw2UB8JUR3u6A3FtQsmmFU4xk0VBp6Hk";
+const GEMINI_API_KEY = "IHR_ECHTER_GEMINI_API_KEY_HIER_EINFÜGEN"; 
 
-if (!GEMINI_API_KEY) {
-  // Wenn der Key nicht gefunden wird, werfen wir einen Fehler (wichtig für Debugging)
-  throw new Error("Fehler: Gemini API Key (VITE_GEMINI_API_KEY) wurde nicht gefunden. Bitte in Netlify prüfen.");
-}
-
-// 2. Den Gemini Client mit dem korrekten Key initialisieren.
+// 2. Den Gemini Client mit dem hart kodierten Key initialisieren.
 const ai = new GoogleGenerativeAI({ apiKey: GEMINI_API_KEY }); 
 
 // *****************************************************************
@@ -54,7 +49,7 @@ export async function generateQuizContent(): Promise<QuizData> {
   try {
     // Die Antwort muss als JSON geparst werden
     const jsonString = response.text.trim();
-    // Wenn die KI zusätzlichen Text sendet, diesen bereinigen (oft ein Problem)
+    // Wenn die KI zusätzlichen Text sendet (oft ein Problem), diesen bereinigen.
     const cleanedString = jsonString.startsWith('```json') ? jsonString.substring(7, jsonString.length - 3).trim() : jsonString;
     return JSON.parse(cleanedString) as QuizData;
   } catch (error) {
