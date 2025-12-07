@@ -1,23 +1,23 @@
 import { GoogleGenerativeAI } from '@google/genai'; 
 import { QuizData, ResultContent, Question, Category } from './types'; 
 
-// ***********************************************
-// 🔑 WICHTIGE KORREKTUR: API KEY AUS NETLIFY LESEN
-// ***********************************************
+// *****************************************************************
+// 🔑 KORREKTUR: VITE-PRÄFIX FÜR API KEY NÖTIG, DAMIT REACT IHN SIEHT
+// *****************************************************************
 
-// 1. Die Umgebungsvariable API_KEY von Netlify auslesen.
-//    process.env.API_KEY funktioniert im Build-Prozess von Netlify/Vite.
-const GEMINI_API_KEY = process.env.API_KEY; 
+// 1. Hole den API Key aus der NEUEN Netlify Umgebungsvariable (VITE_GEMINI_API_KEY)
+//    Wir nutzen process.env, da Netlify es zur Build-Zeit einfügt.
+const GEMINI_API_KEY = process.env.VITE_GEMINI_API_KEY; 
 
 if (!GEMINI_API_KEY) {
-  // Wenn der Key nicht gefunden wird, werfen wir einen Fehler.
-  throw new Error("Fehler: Gemini API Key (API_KEY) wurde nicht gefunden. Bitte in Netlify prüfen.");
+  // Wenn der Key nicht gefunden wird, werfen wir einen Fehler (wichtig für Debugging)
+  throw new Error("Fehler: Gemini API Key (VITE_GEMINI_API_KEY) wurde nicht gefunden. Bitte in Netlify prüfen.");
 }
 
-// 2. Den Gemini Client mit dem ausgelesenen Key initialisieren.
+// 2. Den Gemini Client mit dem korrekten Key initialisieren.
 const ai = new GoogleGenerativeAI({ apiKey: GEMINI_API_KEY }); 
 
-// ***********************************************
+// *****************************************************************
 
 const prompt = `
   Erstelle einen Reifegrad-Check zum Thema "5 Gespräche pro Woche" für LinkedIn.
@@ -54,7 +54,9 @@ export async function generateQuizContent(): Promise<QuizData> {
   try {
     // Die Antwort muss als JSON geparst werden
     const jsonString = response.text.trim();
-    return JSON.parse(jsonString) as QuizData;
+    // Wenn die KI zusätzlichen Text sendet, diesen bereinigen (oft ein Problem)
+    const cleanedString = jsonString.startsWith('```json') ? jsonString.substring(7, jsonString.length - 3).trim() : jsonString;
+    return JSON.parse(cleanedString) as QuizData;
   } catch (error) {
     console.error("JSON Parsing Error:", error);
     console.error("Received text:", response.text);
