@@ -6,7 +6,7 @@ import { QuizData, ResultContent, Question, Category } from './types';
 // *****************************************************************
 
 // ERSETZEN SIE HIER DIESEN PLATZHALTER MIT IHREM ECHTEN GEMINI API KEY!
-// Beispiel: const GEMINI_API_KEY = "AIzaSyDHw2UB8JUR3u6A3FtQsmmFU4xk0VBp6Hk";
+// Beispiel: const GEMINI_API_KEY = "AIzaSyDHW2uB8JUR3u6A3FtQsmmFU4xkOvBp6Hk";
 const GEMINI_API_KEY = "IHR_ECHTER_GEMINI_API_KEY_HIER_EINFÜGEN"; 
 
 // 2. Den Gemini Client mit dem hart kodierten Key initialisieren.
